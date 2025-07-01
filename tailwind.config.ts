@@ -8,7 +8,6 @@ const config: Config = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: ['class', '[data-theme="dark"]'], // Keep dark mode based on class or data-theme
   theme: {
     extend: {},
   },
@@ -16,53 +15,10 @@ const config: Config = {
     require('daisyui'),
   ],
   daisyui: {
-    // Updated themes list: removed the explicit 'custom' object definition
-    // Ensured 'light', 'dark', and 'lofi' are present. Kept others for flexibility.
-    themes: [
-      "light",
-      "dark",
-      "lofi", // Ensure lofi is included
-      "cupcake",
-      "bumblebee",
-      "emerald",
-      "corporate",
-      "synthwave",
-      "retro",
-      "cyberpunk",
-      "valentine",
-      "halloween",
-      "garden",
-      "forest",
-      "aqua",
-      // "lofi", // Already included above
-      "pastel",
-      "fantasy",
-      "wireframe",
-      "black",
-      "luxury",
-      "dracula",
-      "cmyk",
-      "autumn",
-      "business",
-      "acid",
-      "lemonade",
-      "night",
-      "coffee",
-      "winter",
-      "lightest"
-      // You can add your permanent custom themes here later, like:
-      // {
-      //   "mytheme": {
-      //      "primary": "#...",
-      //      "secondary": "#...",
-      //      ... etc ...
-      //   },
-      // },
-    ],
+    themes: ["synthwave", "light", "dark"],
     base: true,
     utils: true,
-    logs: false, // Keep logs disabled unless debugging DaisyUI itself
-    darkTheme: "dark", // Specifies which theme to use when dark mode is activated via class/preference
+    logs: true,
   },
 };
 

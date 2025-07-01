@@ -41,10 +41,8 @@ export const Header = () => {
           
           <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal px-1">
-              <li><Link href="/" className="text-base-content">Accueil</Link></li>
               <li><Link href="/kits" className="text-base-content">Nos Kits</Link></li>
               <li><Link href="/a-propos" className="text-base-content">À propos</Link></li>
-              <li><Link href="/contact" className="text-base-content">Contact</Link></li>
             </ul>
           </div>
           
@@ -63,10 +61,8 @@ export const Header = () => {
                 </svg>
               </div>
               <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                <li><Link href="/">Accueil</Link></li>
                 <li><Link href="/kits">Nos Kits</Link></li>
                 <li><Link href="/a-propos">À propos</Link></li>
-                <li><Link href="/contact">Contact</Link></li>
               </ul>
             </div>
           </div>

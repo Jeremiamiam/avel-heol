@@ -7,7 +7,7 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
-  basePath: process.env.NODE_ENV === 'production' ? '/avel-heol' : '',
+  basePath: process.env.GITHUB_ACTIONS ? '/avel-heol' : '',
 };
 
 export default nextConfig;

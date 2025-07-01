@@ -1,43 +1,57 @@
 import React, { forwardRef } from 'react';
-import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>, 'ref'> {
+interface BaseProps {
   label?: string;
   error?: string;
+  helperText?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  helperText?: string;
-  as?: 'input' | 'textarea';
-  rows?: number;
 }
 
-export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
-  ({ className, label, error, leftIcon, rightIcon, helperText, as = 'input', rows = 3, ...props }, ref) => {
-    const baseStyles = 'input input-bordered w-full';
-    
-    const errorStyles = error ? 'input-error' : '';
-    
-    const iconStyles = clsx(
-      'absolute top-1/2 transform -translate-y-1/2',
-      leftIcon && 'left-3',
-      rightIcon && 'right-3'
-    );
+interface InputProps extends BaseProps, React.InputHTMLAttributes<HTMLInputElement> {
+  as?: 'input';
+}
 
-    const inputWrapperStyles = clsx(
-      'relative',
-      (leftIcon || rightIcon) && 'flex items-center'
-    );
+interface TextareaProps extends BaseProps, React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  as: 'textarea';
+}
 
-    const inputStyles = clsx(
-      baseStyles,
-      errorStyles,
+type CombinedProps = InputProps | TextareaProps;
+
+const baseInputStyles = `
+  input input-bordered w-full
+  bg-base-100 text-base-content
+  border-base-300 focus:border-primary focus:outline-none
+  transition-colors duration-200
+`;
+
+const baseTextareaStyles = `
+  textarea textarea-bordered min-h-[100px] resize-y w-full
+  bg-base-100 text-base-content
+  border-base-300 focus:border-primary focus:outline-none
+  transition-colors duration-200
+`;
+
+const errorStyles = 'border-error focus:border-error';
+
+const iconStyles = `
+  absolute top-1/2 transform -translate-y-1/2
+  flex items-center justify-center
+  w-5 h-5 pointer-events-none
+`;
+
+export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, CombinedProps>(
+  ({ className, label, error, leftIcon, rightIcon, helperText, as = 'input', ...props }, ref) => {
+    const isTextarea = as === 'textarea';
+    
+    const inputClasses = twMerge(
+      isTextarea ? baseTextareaStyles : baseInputStyles,
+      error && errorStyles,
       leftIcon && 'pl-10',
       rightIcon && 'pr-10',
       className
     );
-
-    const Component = as === 'textarea' ? 'textarea' : 'input';
 
     return (
       <div className="w-full">
@@ -47,32 +61,38 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputPro
           </label>
         )}
         
-        <div className={inputWrapperStyles}>
+        <div className="relative">
           {leftIcon && (
-            <span className={twMerge(iconStyles, 'text-neutral')}>
+            <span className={twMerge(iconStyles, 'left-3 text-base-content/50')}>
               {leftIcon}
             </span>
           )}
           
-          <Component
-            ref={ref as any} // Revert back to 'as any' to resolve TS error with polymorphic component + forwardRef
-            className={twMerge(inputStyles)}
-            aria-invalid={error ? 'true' : 'false'}
-            rows={as === 'textarea' ? rows : undefined}
-            {...props}
-          />
+          {isTextarea ? (
+            <textarea
+              ref={ref as React.Ref<HTMLTextAreaElement>}
+              className={inputClasses}
+              {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+            />
+          ) : (
+            <input
+              ref={ref as React.Ref<HTMLInputElement>}
+              className={inputClasses}
+              {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
+            />
+          )}
           
           {rightIcon && (
-            <span className={twMerge(iconStyles, 'text-neutral')}>
+            <span className={twMerge(iconStyles, 'right-3 text-base-content/50')}>
               {rightIcon}
             </span>
           )}
         </div>
-
+        
         {(error || helperText) && (
-          <p className={clsx(
-            'mt-1 text-sm',
-            error ? 'text-red-500' : 'text-gray-500'
+          <p className={twMerge(
+            'text-sm mt-1',
+            error ? 'text-error' : 'text-base-content/60'
           )}>
             {error || helperText}
           </p>

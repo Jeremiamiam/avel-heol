@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr"> {/* Removed data-theme="dracula" */}
+    <html lang="fr" data-theme="synthwave">
       <body className={`${inter.className} ${montserrat.variable} tracking-[0.11em] font-sans`}>
         <Providers>
           <Header />

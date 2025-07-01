@@ -2,75 +2,72 @@
 
 import React, { useState, useEffect } from 'react';
 
-export const CSSDebugger: React.FC = () => {
+interface CSSDebuggerProps {
+  showVariables?: boolean;
+}
+
+const getCSSVariables = () => {
+  if (typeof window === 'undefined') return {};
+  
+  const computedStyle = getComputedStyle(document.documentElement);
+  const variables: Record<string, string> = {};
+  
+  // Get DaisyUI color variables
+  const daisyUIVars = ['--p', '--pc', '--s', '--sc', '--a', '--ac', '--n', '--nc', '--b1', '--b2', '--b3', '--bc'];
+  
+  daisyUIVars.forEach(varName => {
+    const value = computedStyle.getPropertyValue(varName).trim();
+    if (value) {
+      variables[varName] = value;
+    }
+  });
+  
+  return variables;
+};
+
+const CSSDebugger: React.FC<CSSDebuggerProps> = ({ showVariables = false }) => {
+  const [isVisible, setIsVisible] = useState(showVariables);
   const [cssVars, setCssVars] = useState<Record<string, string>>({});
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (isVisible) {
+      setCssVars(getCSSVariables());
+    }
+  }, [isVisible]);
 
-    // Get all CSS variables from :root
-    const computedStyle = getComputedStyle(document.documentElement);
-    const variables: Record<string, string> = {};
-
-    // Filter to only get variables we're interested in (design system related)
-    const varList = [
-      'primary', 'secondary', 'accent', 'neutral', 
-      'base', 'background', 'surface',
-      'text-primary', 'text-secondary',
-      'error', 'success', 'warning', 'info'
-    ];
-
-    varList.forEach(name => {
-      const value = computedStyle.getPropertyValue(`--${name}`).trim();
-      if (value) {
-        variables[name] = value;
-      }
-    });
-
-    // Also check DaisyUI variables
-    ['primary', 'secondary', 'accent', 'neutral', 'base-100'].forEach(name => {
-      const value = computedStyle.getPropertyValue(`--${name}`).trim();
-      if (value) {
-        variables[`daisyui-${name}`] = value;
-      }
-    });
-
-    setCssVars(variables);
-  }, []);
-
-  if (!isOpen) {
+  if (!isVisible) {
     return (
-      <button 
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 left-4 z-50 flex items-center justify-center w-10 h-10 bg-neutral-800 text-white rounded-full shadow-lg text-xs"
-        aria-label="Show CSS Variables"
+      <button
+        onClick={() => setIsVisible(true)}
+        className="fixed bottom-4 left-4 z-50 flex items-center justify-center w-10 h-10 bg-base-300 text-base-content rounded-full shadow-lg text-xs"
+        title="Show CSS Variables"
       >
-        CSS
+        🎨
       </button>
     );
   }
 
   return (
-    <div className="debug-variables">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-bold">CSS Variables</h3>
-        <button 
-          onClick={() => setIsOpen(false)}
-          className="px-2 py-1 bg-white/20 rounded text-xs"
-        >
-          Close
-        </button>
-      </div>
-      <div>
+    <div className="debug-css-vars">
+      <div className="debug-variables">
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-sm font-bold">CSS Variables</h3>
+          <button
+            onClick={() => setIsVisible(false)}
+            className="px-2 py-1 bg-base-content/20 rounded-btn text-xs text-base-content"
+          >
+            ✕
+          </button>
+        </div>
+        
         {Object.entries(cssVars).map(([name, value]) => (
           <div key={name} className="flex justify-between mb-1 text-xs">
-            <span>--{name}:</span>
-            <span className="font-mono">
+            <span className="text-base-content/80">{name}:</span>
+            <span className="font-mono text-base-content">
               {value}
-              <span 
-                className="inline-block ml-2 w-3 h-3 rounded-sm" 
-                style={{ backgroundColor: value }}
+              <span
+                className="inline-block ml-2 w-3 h-3 rounded-sm border border-base-300"
+                style={{ backgroundColor: `hsl(${value})` }}
               />
             </span>
           </div>
