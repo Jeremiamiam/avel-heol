@@ -120,7 +120,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <div className="card-body p-8">
                   <div className="relative aspect-square w-full max-w-md mx-auto">
                     <Image
-                      src="images/produit.png"
+                      src="/avel-heol/images/produit.png"
                       alt={product.name}
                       fill
                       className="object-contain"
