@@ -31,7 +31,7 @@ export default function HomePage() {
               <div className="relative min-h-[70vh] lg:min-h-[80vh]">
                 {/* Image de fond avec parallax */}
                 <img 
-                  src="/images/avelheol_hero.jpg" 
+                  src="./images/avelheol_hero.jpg"
                   alt="Installation photovoltaïque Avel Heol"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-75 ease-out"
                   style={{
